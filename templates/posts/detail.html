@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="post-detail">
+    <h1>{{ post.title }}</h1>
+    {% if post.subtitle %}
+    <h3 class="text-muted mb-3">{{ post.subtitle }}</h3>
+    {% endif %}
+    
+    {% if post.image %}
+    <div class="post-image mb-3">
+      <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-thumbnail" style="max-width: 300px;">
+    </div>
+    {% endif %}
+    
+    <div class="post-meta text-muted mb-3">
+      <p>Posted on {{ post.created_on|date:"F d, Y at g:i A" }}
+      {% if post.author %}
+      by <strong>{{ post.author.username }}</strong>
+      {% endif %}
+      {% if post.status %}
+      <br><span class="badge bg-secondary">Status: {{ post.status.name }}</span>
+      {% endif %}
+      </p>
+    </div>
+    
+    <div class="post-content">
+      {{ post.body|linebreaks }}
+    </div>
+    
+    <div class="mt-4">
+      <a href="{% url 'posts:list' %}" class="btn btn-secondary">Back to Posts</a>
+      {% if user.is_authenticated and user == post.author %}
+      <a href="{% url 'posts:edit' post.pk %}" class="btn btn-warning">Edit Post</a>
+      <a href="{% url 'posts:delete' post.pk %}" class="btn btn-danger">Delete Post</a>
+      {% endif %}
+    </div>
+    
+    <!-- Comments Section -->
+    <hr class="my-4">
+    
+    <h3 id="comments">Comments ({{ comments.count }})</h3>
+    
+    <!-- Display Comments -->
+    <div class="comments-section mb-4">
+      {% for comment in comments %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <h6 class="card-subtitle mb-2">
+                <strong>{{ comment.author.username }}</strong>
+                <small class="text-muted">- {{ comment.created_on|date:"F d, Y at g:i A" }}</small>
+              </h6>
+              <p class="card-text">{{ comment.body|linebreaks }}</p>
+            </div>
+            {% if user.is_authenticated and user == comment.author %}
+            <div class="btn-group-vertical ms-3">
+              <a href="{% url 'posts:comment_edit' comment.pk %}" class="btn btn-sm btn-warning">Edit</a>
+              <a href="{% url 'posts:comment_delete' comment.pk %}" class="btn btn-sm btn-danger">Delete</a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-muted">No comments yet. Be the first to comment!</p>
+      {% endfor %}
+    </div>
+    
+    <!-- Add Comment Form -->
+    {% if user.is_authenticated %}
+    <div class="card">
+      <div class="card-body">
+        <h4>Add a Comment</h4>
+        <form method="post">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+      <a href="{% url 'login' %}">Log in</a> to leave a comment.
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

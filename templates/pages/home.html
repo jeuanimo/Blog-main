@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+  <h1>Welcome to the Home Page</h1>
+
+  <div class="welcome-section">
+    <p>
+      Welcome to our dynamic blog platform! This is a place where ideas come to life 
+      and stories are shared. Whether you're here to explore insightful articles, 
+      engage with thought-provoking content, or connect with a community of writers 
+      and readers, you've come to the right place.
+    </p>
+    <p>
+      Our blog features a comprehensive content management system that allows authors 
+      to create, edit, and publish posts with ease. Readers can discover the latest 
+      articles, leave comments to join the conversation, and explore archived content. 
+      With user authentication, personalized profiles, and an intuitive interface, 
+      we've built a platform that makes sharing knowledge and connecting with others simple and enjoyable.
+    </p>
+  </div>
+
+  <div class="cta-section">
+    <h2>Explore More</h2>
+    <p>
+      Discover amazing content and stay updated with our latest posts and
+      features.
+    </p>
+  </div>
+
+  <div class="feature-cards">
+    <!-- Weather Widget -->
+    <div class="feature-card weather-card">
+      <h3><i class="bi bi-cloud-sun"></i> Local Weather</h3>
+      <div id="weather-widget" class="weather-content">
+        <div class="weather-loading">Loading weather data...</div>
+      </div>
+    </div>
+    
+    <!-- About Us Card (Clickable) -->
+    <a href="{% url 'pages:about' %}" class="feature-card-link">
+      <div class="feature-card about-card">
+        <h3>About Us</h3>
+        <p>
+          Learn more about our mission, vision, and the team behind this amazing
+          blog project.
+        </p>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+    
+    <!-- Daily Quote Widget -->
+    <div class="feature-card quote-card">
+      <h3><i class="bi bi-quote"></i> Daily Inspiration</h3>
+      <div id="quote-widget" class="quote-content">
+        <div class="quote-loading">Loading daily quote...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script src="{% static 'js/weather-quote.js' %}"></script>
+{% endblock %}
+{% endblock %}
